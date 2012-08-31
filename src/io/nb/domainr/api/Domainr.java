@@ -1,5 +1,8 @@
 package io.nb.domainr.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.nb.domainr.api.model.InfoResult;
+import io.nb.domainr.api.model.SearchResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,12 +14,22 @@ import java.net.URL;
 
 public class Domainr {
 
-    public static JSONObject search(String query) throws IOException, JSONException {
-        return request("http://domai.nr/api/json/search?q=", query);
+    public static SearchResult search(String query) throws IOException, JSONException {
+        JSONObject result = request("http://domai.nr/api/json/search?q=", query);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        SearchResult searchResult = objectMapper.readValue(result.toString(), SearchResult.class);
+
+        return searchResult;
     }
 
-    public static JSONObject info(String query) throws IOException, JSONException {
-        return request("http://domai.nr/api/json/info?q=", query);
+    public static InfoResult info(String query) throws IOException, JSONException {
+        JSONObject result = request("http://domai.nr/api/json/info?q=", query);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        InfoResult infoResult = objectMapper.readValue(result.toString(), InfoResult.class);
+
+        return infoResult;
     }
 
     private static JSONObject request(String url, String query) throws IOException, JSONException {
